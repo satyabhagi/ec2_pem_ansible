@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  gather_facts: False
+  tasks:
+  - name: ec2 key
+    ec2_key:
+      name: example1
+      region: ap-south-1
+    register: keyout
+
+  - debug:
+      var: keyout
+
+  - name: store login key
+    copy:
+      content: "{{keyout.key.private_key}}"
+      dest: ./example-key.pem
+    when: keyout.changed
